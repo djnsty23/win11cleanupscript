@@ -1,0 +1,39 @@
+{
+    "cleanup": {
+        "paths": {
+            "temp": ["%TEMP%", "C:\\Windows\\Temp"],
+            "windowsUpdate": "C:\\Windows\\SoftwareDistribution\\Download",
+            "chromeCache": "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Cache",
+            "chromeOAuth": "%LOCALAPPDATA%\\Google\\Chrome\\User Data\\Default\\Local State",
+            "windowsStore": "%LOCALAPPDATA%\\Packages\\*",
+            "thumbnails": "%LOCALAPPDATA%\\Microsoft\\Windows\\Explorer",
+            "prefetch": "C:\\Windows\\Prefetch",
+            "recent": "%APPDATA%\\Microsoft\\Windows\\Recent",
+            "errorReports": "%LOCALAPPDATA%\\Microsoft\\Windows\\WER"
+        },
+        "preservePatterns": {
+            "chrome": ["*oauth*", "*cookies*", "*login*", "*session*"]
+        },
+        "services": {
+            "windowsUpdate": "wuauserv",
+            "eventLog": "EventLog"
+        }
+    },
+    "scheduling": {
+        "dailyCleanup": {
+            "time": "21:00",
+            "description": "Daily System Cleanup"
+        },
+        "monthlyMaintenance": {
+            "time": "01:00",
+            "dayOfWeek": "Sunday",
+            "weekInterval": 4,
+            "description": "Monthly System Maintenance"
+        }
+    },
+    "logging": {
+        "path": "%USERPROFILE%\\Documents\\CleanupLog.txt",
+        "testLogPath": "%USERPROFILE%\\Documents\\CleanupTestLog.txt",
+        "retentionDays": 30
+    }
+} 

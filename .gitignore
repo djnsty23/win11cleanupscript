@@ -1,0 +1,25 @@
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Windows thumbnails
+._*
+
+# PowerShell
+*.ps1.log
+*.tmp
+*.temp
+
+# Visual Studio Code
+.vscode/
+.vs/
+*.code-workspace
+
+# Local history
+.history/
+
+# Custom log files
+**/CleanupLog*.txt
+**/CleanupTestLog*.txt 
