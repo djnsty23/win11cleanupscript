@@ -101,3 +101,5 @@ The enhanced script includes several system maintenance tasks:
 - DISM to repair the Windows image
 - SSD optimization for systems with solid-state drives
 - Clearing of various Windows caches and temporary files 
+
+If you enjoyed the tool, feel free to share a coffee with me at https://ko-fi.com/djnsty. Thanks!
