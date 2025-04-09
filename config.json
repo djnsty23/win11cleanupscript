@@ -19,6 +19,19 @@
             "eventLog": "EventLog"
         }
     },
+    "gamingProfiles": {
+        "backupPaths": {
+            "msiAfterburner": [
+                "%PROGRAMFILES(X86)%\\MSI Afterburner\\Profiles",
+                "%APPDATA%\\MSI Afterburner"
+            ],
+            "fanControl": [
+                "%APPDATA%\\FanControl"
+            ]
+        },
+        "backupLocation": "%USERPROFILE%\\Documents\\GamingProfilesBackup",
+        "maxBackups": 10
+    },
     "scheduling": {
         "dailyCleanup": {
             "time": "21:00",
@@ -29,6 +42,11 @@
             "dayOfWeek": "Sunday",
             "weekInterval": 4,
             "description": "Monthly System Maintenance"
+        },
+        "gamingBackup": {
+            "time": "20:00",
+            "dayInterval": 7,
+            "description": "Gaming Profiles Backup"
         }
     },
     "logging": {

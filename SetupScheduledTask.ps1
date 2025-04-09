@@ -94,6 +94,7 @@ try {
     # Get script paths
     $cleanupScriptPath = Join-Path $PSScriptRoot "CleanupScript.ps1"
     $maintenanceScriptPath = Join-Path $PSScriptRoot "MonthlyMaintenance.ps1"
+    $gamingBackupScriptPath = Join-Path $PSScriptRoot "BackupGamingProfiles.ps1"
     
     # Verify scripts exist
     if (-not (Test-Path $cleanupScriptPath)) {
@@ -101,6 +102,9 @@ try {
     }
     if (-not (Test-Path $maintenanceScriptPath)) {
         throw "MonthlyMaintenance.ps1 not found at: $maintenanceScriptPath"
+    }
+    if (-not (Test-Path $gamingBackupScriptPath)) {
+        throw "BackupGamingProfiles.ps1 not found at: $gamingBackupScriptPath"
     }
     
     # Setup daily cleanup task
@@ -117,7 +121,35 @@ try {
                                      -DayOfWeek $config.scheduling.monthlyMaintenance.dayOfWeek `
                                      -WeekInterval $config.scheduling.monthlyMaintenance.weekInterval
     
-    if ($dailyResult -and $monthlyResult) {
+    # Setup gaming profiles backup task
+    $weeklyTrigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek "Sunday" -At $config.scheduling.gamingBackup.time
+    $gamingTaskAction = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$gamingBackupScriptPath`""
+    $gamingTaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
+    $gamingTaskPrincipal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
+    
+    try {
+        $existingGamingTask = Get-ScheduledTask -TaskName $config.scheduling.gamingBackup.description -ErrorAction SilentlyContinue
+        if ($existingGamingTask) {
+            Unregister-ScheduledTask -TaskName $config.scheduling.gamingBackup.description -Confirm:$false
+            Add-Content -Path $logFile -Value "Removed existing gaming backup task"
+        }
+        
+        Register-ScheduledTask -TaskName $config.scheduling.gamingBackup.description `
+                             -Action $gamingTaskAction `
+                             -Trigger $weeklyTrigger `
+                             -Settings $gamingTaskSettings `
+                             -Principal $gamingTaskPrincipal `
+                             -Description "Weekly backup of MSI Afterburner and FanControl profiles" `
+                             -Force
+        
+        Add-Content -Path $logFile -Value "Gaming profiles backup task created successfully"
+        $gamingResult = $true
+    } catch {
+        Add-Content -Path $logFile -Value "Error creating gaming profiles backup task: $($_.Exception.Message)"
+        $gamingResult = $false
+    }
+    
+    if ($dailyResult -and $monthlyResult -and $gamingResult) {
         Add-Content -Path $logFile -Value "All tasks configured successfully"
     } else {
         throw "One or more tasks failed to configure"
